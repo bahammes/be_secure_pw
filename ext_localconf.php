@@ -43,15 +43,10 @@ $boot = function () {
         'class' => ForcePasswordChangeButton::class,
     ];
 
-    $GLOBALS['TYPO3_CONF_VARS']['SYS']['passwordPolicies'] = [
-        'default' => [
-            'be_secure_pw' => [
-                \SpoonerWeb\BeSecurePw\PasswordPolicy\Validator\PasswordValidator::class => [
-                    'options' => [
-                    ],
-                ],
-            ],
-        ],
+    $bePasswordPolicy = $GLOBALS['TYPO3_CONF_VARS']['BE']['passwordPolicy'] ?? 'default';
+    $policyOptions = \SpoonerWeb\BeSecurePw\PasswordPolicy\Validator\PasswordValidator::buildValidatorOptions($bePasswordPolicy);
+    $GLOBALS['TYPO3_CONF_VARS']['SYS']['passwordPolicies'][$bePasswordPolicy]['validators'][\SpoonerWeb\BeSecurePw\PasswordPolicy\Validator\PasswordValidator::class] = [
+        'options' => $policyOptions,
     ];
 };
 
