@@ -7,6 +7,7 @@ namespace SpoonerWeb\BeSecurePw\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SpoonerWeb\BeSecurePw\Database\Event\AddForceResetPasswordLinkEvent;
+use SpoonerWeb\BeSecurePw\Utilities\TranslationUtility;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
@@ -43,15 +44,11 @@ class ForcePasswordChangeController
         $dataHandler->start($data, []);
         $dataHandler->process_datamap();
 
-        $languageService = GeneralUtility::makeInstance(LanguageServiceFactory::class)
-            ->createFromUserPreferences($GLOBALS['BE_USER']);
-        $languageService->includeLLFile('EXT:be_secure_pw/Resources/Private/Language/locallang.xlf');
-
         $messageQueue = GeneralUtility::makeInstance(FlashMessageService::class)->getMessageQueueByIdentifier();
         $messageQueue->addMessage(
             new FlashMessage(
-                sprintf($languageService->getLL('forcedPasswordChange.message'), $userUid),
-                $languageService->getLL('forcedPasswordChange.title'),
+                sprintf(TranslationUtility::translate('forcedPasswordChange.message'), $userUid),
+                TranslationUtility::translate('forcedPasswordChange.title'),
                 AbstractMessage::INFO,
                 true
             )

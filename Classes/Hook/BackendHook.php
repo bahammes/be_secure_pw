@@ -16,11 +16,12 @@ namespace SpoonerWeb\BeSecurePw\Hook;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
 use SpoonerWeb\BeSecurePw\Utilities\PasswordExpirationUtility;
+use SpoonerWeb\BeSecurePw\Utilities\TranslationUtility;
 use TYPO3\CMS\Backend\Controller\BackendController;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Http\Request;
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -37,22 +38,28 @@ class BackendHook
      *
      * @param array $config
      * @param BackendController $backendReference
+     * @deprecated Only used for TYPO3 11.5
      */
     public function constructPostProcess(array $config, BackendController $backendReference): void
+    {
+        $this->onAfterBackendPageRenderEvent();
+    }
+    /**
+     * constructPostProcess
+     */
+    public function onAfterBackendPageRenderEvent(): void
     {
         if (!PasswordExpirationUtility::isBeUserPasswordExpired()) {
             return;
         }
 
-        $GLOBALS['LANG']->includeLLFile('EXT:be_secure_pw/Resources/Private/Language/locallang.xlf');
-
         $flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);
         $messageQueue = $flashMessageService->getMessageQueueByIdentifier();
         $messageQueue->addMessage(
             new FlashMessage(
-                $GLOBALS['LANG']->getLL('needPasswordChange.message'),
-                $GLOBALS['LANG']->getLL('needPasswordChange.title'),
-                AbstractMessage::INFO,
+                TranslationUtility::translate('needPasswordChange.message'),
+                TranslationUtility::translate('needPasswordChange.title'),
+                \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::INFO,
                 true
             )
         );

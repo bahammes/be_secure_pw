@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SpoonerWeb\BeSecurePw\Form\Element;
 
 use SpoonerWeb\BeSecurePw\Database\Event\AddForceResetPasswordLinkEvent;
+use SpoonerWeb\BeSecurePw\Utilities\TranslationUtility;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -59,7 +60,7 @@ class ForcePasswordChangeButton extends AbstractFormElement
         $html[] = '<div class="form-wizards-element">';
         $html[] = '<div class="form-control-wrap">';
         $html[] = '<a href="' . $uri . '" class="btn btn-primary">';
-        $html[] = $languageService->getLL('forcePasswordChange');
+        $html[] = TranslationUtility::translate('forcePasswordChange');
         $html[] = '</a>';
         $html[] = '</div>';
         $html[] = '</div>';

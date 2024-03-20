@@ -49,7 +49,7 @@ class PawnedPasswordService
             return 0;
         }
 
-        if (preg_match('/' . preg_quote(substr($hash, 5)) . ':([0-9]+)/ism', $results, $matches) === 1) {
+        if (preg_match('/' . preg_quote(substr($hash, 5), '/') . ':([0-9]+)/ism', $results, $matches) === 1) {
             return (int)$matches[1];
         }
 

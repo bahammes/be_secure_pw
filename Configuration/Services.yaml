@@ -11,3 +11,9 @@ services:
     tags:
       - name: event.listener
         identifier: 'addForceResetPasswordLink'
+
+  SpoonerWeb\BeSecurePw\EventListener\AfterBackendPageRenderEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'be-secure-pw-after-backend-page-renderer-event'
+        event: TYPO3\CMS\Backend\Controller\Event\AfterBackendPageRenderEvent

@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace SpoonerWeb\BeSecurePw\Database\Event;
 
+use Psr\Http\Message\ServerRequestInterface;
+use SpoonerWeb\BeSecurePw\Utilities\TranslationUtility;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Recordlist\Event\ModifyRecordListRecordActionsEvent;
+use TYPO3\CMS\Backend\RecordList\Event\ModifyRecordListRecordActionsEvent;
 
 /**
  * This file is part of the TYPO3 CMS extension "be_secure_pw".
@@ -37,15 +41,10 @@ class AddForceResetPasswordLinkEvent
                     self::$passwordChangeCommand => $event->getRecord()['uid'],
                 ]
             );
-
-            $languageService = GeneralUtility::makeInstance(LanguageServiceFactory::class)
-                ->createFromUserPreferences($GLOBALS['BE_USER']);
-            $languageService->includeLLFile('EXT:be_secure_pw/Resources/Private/Language/locallang.xlf');
-
             $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
             $forcePasswordChangeAction = '<a class="btn btn-default"'
                 . ' href="' . htmlspecialchars($url) . '"'
-                . ' title="' . htmlspecialchars($languageService->getLL('forcePasswordChange')) . '">'
+                . ' title="' . htmlspecialchars(TranslationUtility::translate('forcePasswordChange')) . '">'
                 . $iconFactory->getIcon('form-password', Icon::SIZE_SMALL)->render() . '</a>';
 
             $event->setAction(

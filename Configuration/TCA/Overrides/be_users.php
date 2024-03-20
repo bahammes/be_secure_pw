@@ -1,6 +1,5 @@
 <?php
 
-use SpoonerWeb\BeSecurePw\Evaluation\PasswordEvaluator;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 $tempColumns = [
@@ -31,9 +30,6 @@ ExtensionManagementUtility::addToAllTCAtypes(
     'be_users',
     '--div--;Secure Password,tx_besecurepw_lastpwchange,tx_besecurepw_forcepasswordchange'
 );
-
-$GLOBALS['TCA']['be_users']['columns']['password']['config']['eval'] = str_replace(
-    ',saltedPassword',
-    ',' . PasswordEvaluator::class . ',saltedPassword',
-    $GLOBALS['TCA']['be_users']['columns']['password']['config']['eval']
-);
+if (empty($GLOBALS['TCA']['be_users']['columns']['password']['config']['passwordPolicy'])) {
+    $GLOBALS['TCA']['be_users']['columns']['password']['config']['passwordPolicy'] = 'default';
+}

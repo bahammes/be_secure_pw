@@ -16,9 +16,9 @@ namespace SpoonerWeb\BeSecurePw\Hook;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
 use SpoonerWeb\BeSecurePw\Utilities\PasswordExpirationUtility;
-use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use SpoonerWeb\BeSecurePw\Utilities\TranslationUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageQueue;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
@@ -54,15 +54,14 @@ class UserSetupHook
         if ($params['be_user_data']['password'] === ($params['be_user_data']['passwordCurrent'] ?? '')) {
             $params['be_user_data']['password'] = '';
             $params['be_user_data']['password2'] = '';
-            $this->getLanguageLabels();
             $flashMessageService = GeneralUtility::makeInstance(FlashMessageService::class);
             /** @var FlashMessageQueue $messageQueue */
             $messageQueue = $flashMessageService->getMessageQueueByIdentifier();
             $messageQueue->addMessage(
                 new FlashMessage(
-                    $GLOBALS['LANG']->getLL('samePassword'),
+                    TranslationUtility::translate('samePassword'),
                     '',
-                    AbstractMessage::WARNING,
+                    \TYPO3\CMS\Core\Type\ContextualFeedbackSeverity::WARNING,
                     true
                 )
             );
@@ -72,15 +71,5 @@ class UserSetupHook
         if ($params['be_user_data']['password'] === '') {
             $params['be_user_data']['password2'] = '';
         }
-    }
-
-    private function getLanguageLabels(): void
-    {
-        // get the languages from ext
-        if (empty($GLOBALS['LANG'])) {
-            $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageService::class);
-            $GLOBALS['LANG']->init($GLOBALS['BE_USER']->uc['lang']);
-        }
-        $GLOBALS['LANG']->includeLLFile('EXT:be_secure_pw/Resources/Private/Language/locallang.xlf');
     }
 }
